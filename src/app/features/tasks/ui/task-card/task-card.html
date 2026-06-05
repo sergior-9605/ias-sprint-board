@@ -1,0 +1,47 @@
+<article class="group transition-colors hover:bg-slate-50">
+
+    <!-- Mobile: card layout -->
+    <div class="sm:hidden flex items-start gap-3 px-4 py-4">
+        <div class="mt-1.5 h-2 w-2 shrink-0" [class]="priorityDot()"></div>
+        <div class="min-w-0 flex-1">
+            <div class="flex items-start justify-between gap-2">
+                <a [routerLink]="['/tasks', task().id]"
+                    class="font-semibold text-slate-900 hover:text-indigo-600 transition-colors leading-snug focus:outline-none">{{ task().title }}</a>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <app-priority-badge [priority]="task().priority" />
+                    <a [routerLink]="['/tasks', task().id]"
+                        class="text-slate-400 hover:text-indigo-600 transition-colors focus:outline-none"
+                        title="Ver y editar tarea">
+                        <span class="material-icons text-[18px] leading-none">edit</span>
+                    </a>
+                </div>
+            </div>
+            <p class="mt-0.5 text-xs text-slate-400 line-clamp-1">{{ task().description }}</p>
+            <div class="mt-2 flex items-center gap-2">
+                <app-status-badge [status]="task().status" />
+                <span class="text-xs text-slate-400">{{ task().assignee }}</span>
+                <span class="text-xs text-slate-300">·</span>
+                <span class="text-xs text-slate-400">{{ task().dueDate }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desktop: table row -->
+    <div class="hidden sm:grid sm:grid-cols-[1fr_160px_140px_100px_110px_44px] sm:items-center sm:gap-4 sm:px-5 sm:py-3.5">
+        <div class="flex items-center gap-3 min-w-0">
+            <div class="h-2 w-2 shrink-0" [class]="priorityDot()"></div>
+            <a [routerLink]="['/tasks', task().id]"
+                class="font-medium text-slate-900 hover:text-indigo-600 transition-colors truncate focus:outline-none focus:underline">{{ task().title }}</a>
+        </div>
+        <span class="text-sm text-slate-500 truncate">{{ task().assignee }}</span>
+        <app-status-badge [status]="task().status" />
+        <app-priority-badge [priority]="task().priority" />
+        <span class="text-xs text-slate-400">{{ task().dueDate }}</span>
+        <a [routerLink]="['/tasks', task().id]"
+            class="flex items-center justify-center text-slate-400 hover:text-indigo-600 transition-colors focus:outline-none"
+            title="Ver y editar tarea">
+            <span class="material-icons text-[18px] leading-none">edit</span>
+        </a>
+    </div>
+
+</article>

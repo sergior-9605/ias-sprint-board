@@ -1,0 +1,24 @@
+<div class="grid gap-3 sm:grid-cols-3">
+    <div class="flex flex-col gap-1.5">
+        <label for="search" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Buscar</label>
+        <input id="search" type="search" [value]="search()" (input)="onSearch($event)"
+            placeholder="Título o responsable..."
+            class="border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+    </div>
+    <div class="flex flex-col gap-1.5">
+        <label for="status" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Estado</label>
+        <select id="status" [value]="status()" (change)="onStatus($event)"
+            class="border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            <option value="all">Todos los estados</option>
+            @for (s of statuses; track s) { <option [value]="s">{{ statusLabels[s] }}</option> }
+        </select>
+    </div>
+    <div class="flex flex-col gap-1.5">
+        <label for="priority" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Prioridad</label>
+        <select id="priority" [value]="priority()" (change)="onPriority($event)"
+            class="border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            <option value="all">Todas las prioridades</option>
+            @for (p of priorities; track p) { <option [value]="p">{{ priorityLabels[p] }}</option> }
+        </select>
+    </div>
+</div>

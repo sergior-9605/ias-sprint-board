@@ -1,0 +1,90 @@
+<section class="px-4 sm:px-6 lg:px-10 py-6">
+
+    <header class="mb-6 flex items-start justify-between gap-4">
+        <div>
+            <h1 class="text-xl font-bold tracking-tight text-slate-900">Tablero de tareas</h1>
+            <p class="mt-0.5 text-sm text-slate-400">Sprint activo</p>
+        </div>
+        <a routerLink="/tasks/new"
+            class="shrink-0 bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            + Nueva tarea
+        </a>
+    </header>
+
+    <dl class="mb-6 grid grid-cols-2 gap-px bg-slate-200 border border-slate-200 sm:grid-cols-5">
+        <div class="bg-white px-5 py-4">
+            <dt class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Total</dt>
+            <dd class="mt-1.5 text-3xl font-bold text-slate-900">{{ store.summary().total }}</dd>
+        </div>
+        <div class="bg-white px-5 py-4">
+            <dt class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Abiertas</dt>
+            <dd class="mt-1.5 text-3xl font-bold text-slate-700">{{ store.summary().open }}</dd>
+        </div>
+        <div class="bg-white px-5 py-4">
+            <dt class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Bloqueadas</dt>
+            <dd class="mt-1.5 text-3xl font-bold text-red-500">{{ store.summary().blocked }}</dd>
+        </div>
+        <div class="bg-white px-5 py-4">
+            <dt class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Hechas</dt>
+            <dd class="mt-1.5 text-3xl font-bold text-emerald-500">{{ store.summary().done }}</dd>
+        </div>
+        <div class="bg-white px-5 py-4">
+            <dt class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Avance</dt>
+            <dd class="mt-1.5 text-3xl font-bold text-indigo-600">{{ store.summary().progress }}%</dd>
+        </div>
+    </dl>
+
+    <div class="mb-4 border border-slate-200 bg-white px-5 py-4">
+        <app-task-filters [search]="store.search()" [status]="store.status()"
+            [priority]="store.priority()" (searchChange)="store.setSearch($event)"
+            (statusChange)="store.setStatus($event)" (priorityChange)="store.setPriority($event)"
+        />
+    </div>
+
+    @switch (viewState()) {
+        @case ('loading') {
+            <div class="border border-slate-200 bg-white">
+                @for (_ of [1,2,3,4,5]; track $index) {
+                    <div class="border-b border-slate-100 px-5 py-4">
+                        <div class="flex gap-3">
+                            <div class="h-2 w-2 mt-1.5 shrink-0 bg-slate-200 animate-pulse"></div>
+                            <div class="flex-1 space-y-2">
+                                <div class="h-3.5 w-1/2 bg-slate-100 animate-pulse"></div>
+                                <div class="h-3 w-1/3 bg-slate-100 animate-pulse"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        @case ('error') {
+            <div role="alert" aria-live="assertive" class="border border-red-200 bg-red-50 p-5 text-center">
+                <p class="font-medium text-red-700">{{ store.error() }}</p>
+                <button (click)="store.load()" class="mt-2 text-sm font-semibold text-red-600 underline">Reintentar</button>
+            </div>
+        }
+        @case ('empty') {
+            <div class="border border-slate-200 bg-white py-20 text-center">
+                <p class="text-sm text-slate-400">No hay tareas que coincidan con los filtros.</p>
+            </div>
+        }
+        @case ('success') {
+            <div class="border border-slate-200 bg-white overflow-hidden">
+                <div class="hidden sm:grid sm:grid-cols-[1fr_160px_140px_100px_110px_44px] sm:gap-4 border-b border-slate-200 bg-slate-50 px-5 py-2.5">
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 pl-5">Tarea</span>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Responsable</span>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Estado</span>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Prioridad</span>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Vence</span>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400"></span>
+                </div>
+                <ul class="divide-y divide-slate-100">
+                    @for (task of store.filteredTasks(); track task.id) {
+                        <li><app-task-card [task]="task" /></li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+
+</section>

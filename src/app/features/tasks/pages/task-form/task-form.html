@@ -1,0 +1,103 @@
+<section class="px-4 sm:px-6 lg:px-10 py-6">
+
+    <div class="mb-5">
+        <h1 class="text-xl font-bold tracking-tight text-slate-900">
+            {{ isEditMode ? 'Editar tarea' : 'Nueva tarea' }}
+        </h1>
+        <p class="mt-0.5 text-sm text-slate-400">
+            {{ isEditMode ? 'Modifica los campos necesarios y guarda los cambios.' : 'Completa los campos para añadir una nueva tarea al sprint.' }}
+        </p>
+    </div>
+
+    <form (ngSubmit)="submit()" [formGroup]="form" class="border border-slate-200 bg-white overflow-hidden">
+        <div class="divide-y divide-slate-100">
+
+            <div class="px-5 py-4 flex flex-col gap-1.5">
+                <label for="title" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Título</label>
+                <input id="title" formControlName="title" placeholder="Ej. Implementar autenticación OAuth"
+                    class="border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+                @if (form.controls.title.touched && form.controls.title.errors) {
+                    <p role="alert" class="text-xs text-red-500">
+                        @if (form.controls.title.errors['required']) { El título es requerido. }
+                        @else if (form.controls.title.errors['minlength']) { Mínimo 5 caracteres. }
+                        @else if (form.controls.title.errors['maxlength']) { Máximo 80 caracteres. }
+                    </p>
+                }
+            </div>
+
+            <div class="px-5 py-4 flex flex-col gap-1.5">
+                <label for="description" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Descripción</label>
+                <textarea id="description" formControlName="description" rows="4" placeholder="Detalla el objetivo y alcance de la tarea..."
+                    class="border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-none">
+                </textarea>
+                @if (form.controls.description.touched && form.controls.description.errors) {
+                    <p role="alert" class="text-xs text-red-500">
+                        @if (form.controls.description.errors['required']) { La descripción es requerida. }
+                        @else if (form.controls.description.errors['minlength']) { Mínimo 20 caracteres. }
+                        @else if (form.controls.description.errors['maxlength']) { Máximo 500 caracteres. }
+                    </p>
+                }
+            </div>
+
+            <div class="px-5 py-4 grid gap-4 sm:grid-cols-2">
+                <div class="flex flex-col gap-1.5">
+                    <label for="status" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Estado</label>
+                    <select id="status" formControlName="status"
+                        class="border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        @for (s of statuses; track s) { <option [value]="s">{{ s }}</option> }
+                    </select>
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label for="priority" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Prioridad</label>
+                    <select id="priority" formControlName="priority"
+                        class="border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        @for (p of priorities; track p) { <option [value]="p">{{ p }}</option> }
+                    </select>
+                </div>
+            </div>
+
+            <div class="px-5 py-4 flex flex-col gap-1.5">
+                <label for="assignee" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Responsable</label>
+                <input id="assignee" formControlName="assignee" placeholder="Nombre del responsable"
+                    class="border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+                @if (form.controls.assignee.touched && form.controls.assignee.errors) {
+                    <p role="alert" class="text-xs text-red-500">El responsable es requerido (mínimo 3 caracteres).</p>
+                }
+            </div>
+
+            <div class="px-5 py-4 flex flex-col gap-1.5">
+                <label for="dueDate" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Fecha límite</label>
+                <input id="dueDate" type="date" formControlName="dueDate"
+                    class="border border-slate-300 px-3 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+                @if (form.controls.dueDate.touched && form.controls.dueDate.errors) {
+                    <p role="alert" class="text-xs text-red-500">
+                        @if (form.controls.dueDate.errors['required']) { La fecha es requerida. }
+                        @else { La fecha no es válida o es anterior a hoy. }
+                    </p>
+                }
+            </div>
+
+            <div class="px-5 py-4 flex flex-col gap-1.5">
+                <label for="tags" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+                    Etiquetas <span class="normal-case font-normal tracking-normal text-slate-300">— separadas por coma</span>
+                </label>
+                <input id="tags" formControlName="tags" placeholder="ui, backend, tests"
+                    class="border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="border-t border-slate-200 bg-slate-50 px-5 py-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <a routerLink="/tasks"
+                class="border border-slate-200 bg-white px-6 py-2.5 text-center text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                Cancelar
+            </a>
+            <button type="submit" [disabled]="submitting()"
+                class="bg-green-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-800 disabled:opacity-50 transition-colors cursor-pointer">
+                {{ submitting() ? 'Guardando…' : (isEditMode ? 'Guardar cambios' : 'Crear tarea') }}
+            </button>
+        </div>
+    </form>
+
+</section>
